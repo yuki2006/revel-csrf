@@ -36,13 +36,13 @@ var CSRFFilter = func(c *revel.Controller, fc []revel.Filter) {
 		realToken = generateNewToken(c)
 	} else {
 		realToken = tokenCookie.(string)
-		revel.AppLog.Infof("REVEL-CSRF: Session's token: '%s'\n", realToken)
+		revel.AppLog.Debugf("REVEL-CSRF: Session's token: '%s'\n", realToken)
 		if len(realToken) != lengthCSRFToken {
 			// Wrong length; token has either been tampered with, we're migrating
 			// onto a new algorithm for generating tokens, or a new session has
 			// been initiated. In any case, a new token is generated and the
 			// error will be detected later.
-			revel.AppLog.Infof("REVEL_CSRF: Bad token length: found %d, expected %d",
+			revel.AppLog.Debugf("REVEL_CSRF: Bad token length: found %d, expected %d",
 				len(realToken), lengthCSRFToken)
 			realToken = generateNewToken(c)
 		}
@@ -81,7 +81,7 @@ var CSRFFilter = func(c *revel.Controller, fc []revel.Filter) {
 			// Get CSRF token from form.
 			sentToken = c.Params.Get(fieldName)
 		}
-		revel.AppLog.Infof("REVEL-CSRF: Token received from client: '%s'", sentToken)
+		revel.AppLog.Debugf("REVEL-CSRF: Token received from client: '%s'", sentToken)
 
 		if len(sentToken) != len(realToken) {
 			c.Result = c.Forbidden(errBadToken)
@@ -92,7 +92,7 @@ var CSRFFilter = func(c *revel.Controller, fc []revel.Filter) {
 			c.Result = c.Forbidden(errBadToken)
 			return
 		}
-		revel.AppLog.Infof("REVEL-CSRF: Token successfully checked.")
+		revel.AppLog.Debugf("REVEL-CSRF: Token successfully checked.")
 	}
 
 	fc[0](c, fc[1:])
